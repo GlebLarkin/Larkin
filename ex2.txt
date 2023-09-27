@@ -1,0 +1,31 @@
+import RPi.GPIO as GPIO
+import math as m
+from time import sleep
+
+def binary(n):
+    return [int(element) for element in bin(n)[2::].zfill(8)]
+
+GPIO.setmode(GPIO.BCM)
+dac = [8, 11, 7, 1, 0, 5, 12, 6]
+GPIO.setup(dac, GPIO.OUT)
+
+try:
+    while(1):
+        n = input()
+        if not n.isdigit():
+            print("число пожалуйста")
+            continue
+        num = int(n)/256/2
+        for i in range(256):
+            GPIO.output(dac, binary(i))
+            sleep(num)
+            print(i)
+        for i in range(254, -1, -1):
+            GPIO.output(dac, binary(i))
+            sleep(num)
+            print(i)
+
+    
+finally:
+    GPIO.output(dac, 1)
+    GPIO.cleanup()
